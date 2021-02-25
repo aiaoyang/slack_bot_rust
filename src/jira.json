@@ -1,0 +1,259 @@
+{
+	"timestamp": 1614149140397,
+	"webhookEvent": "jira:issue_updated",
+	"issue_event_type_name": "issue_comment_deleted",
+	"user": {
+		"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=admin",
+		"name": "admin",
+		"key": "admin",
+		"emailAddress": "zhangxianchun@ys4fun.com",
+		"avatarUrls": {
+			"48x48": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=48",
+			"24x24": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=24",
+			"16x16": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=16",
+			"32x32": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=32"
+		},
+		"displayName": "admin",
+		"active": true,
+		"timeZone": "Asia/Shanghai"
+	},
+	"issue": {
+		"id": "10902",
+		"self": "https://testjira.in.ys4fun.com/rest/api/2/issue/10902",
+		"key": "YS01-44",
+		"fields": {
+			"issuetype": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/issuetype/10100",
+				"id": "10100",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://testjira.in.ys4fun.com/secure/viewavatar?size=xsmall&avatarId=10321&avatarType=issuetype",
+				"name": "任务",
+				"subtask": false,
+				"avatarId": 10321
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "YS01",
+				"name": "勇仕学院",
+				"avatarUrls": {
+					"48x48": "https://testjira.in.ys4fun.com/secure/projectavatar?pid=10000&avatarId=10330",
+					"24x24": "https://testjira.in.ys4fun.com/secure/projectavatar?size=small&pid=10000&avatarId=10330",
+					"16x16": "https://testjira.in.ys4fun.com/secure/projectavatar?size=xsmall&pid=10000&avatarId=10330",
+					"32x32": "https://testjira.in.ys4fun.com/secure/projectavatar?size=medium&pid=10000&avatarId=10330"
+				},
+				"projectCategory": {
+					"self": "https://testjira.in.ys4fun.com/rest/api/2/projectCategory/10000",
+					"id": "10000",
+					"description": "",
+					"name": "1"
+				}
+			},
+			"fixVersions": [
+
+			],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"customfield_10104": null,
+			"customfield_10500": "2021-01-12",
+			"customfield_10105": "0|i000i7:",
+			"customfield_10501": "2021-01-12",
+			"customfield_10502": null,
+			"customfield_10503": null,
+			"customfield_10504": null,
+			"customfield_10505": null,
+			"customfield_10506": null,
+			"resolutiondate": null,
+			"customfield_10507": null,
+			"workratio": -1,
+			"lastViewed": "2021-02-24T14:45:40.371+0800",
+			"watches": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/issue/YS01-44/watchers",
+				"watchCount": 2,
+				"isWatching": true
+			},
+			"created": "2021-01-12T12:02:28.000+0800",
+			"priority": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/priority/1",
+				"iconUrl": "https://testjira.in.ys4fun.com/images/icons/priorities/highest.svg",
+				"name": "Highest",
+				"id": "1"
+			},
+			"customfield_10100": null,
+			"customfield_10300": null,
+			"labels": [
+
+			],
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [
+
+			],
+			"issuelinks": [
+
+			],
+			"assignee": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "zhangxianchun@ys4fun.com",
+				"avatarUrls": {
+					"48x48": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=48",
+					"24x24": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=24",
+					"16x16": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=16",
+					"32x32": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=32"
+				},
+				"displayName": "admin",
+				"active": true,
+				"timeZone": "Asia/Shanghai"
+			},
+			"updated": "2021-02-24T14:45:40.000+0800",
+			"status": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/status/1",
+				"description": "问题已经准备好让经办人开始处理。",
+				"iconUrl": "https://testjira.in.ys4fun.com/images/icons/statuses/open.png",
+				"name": "开放",
+				"id": "1",
+				"statusCategory": {
+					"self": "https://testjira.in.ys4fun.com/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "待办"
+				}
+			},
+			"components": [
+				{
+					"self": "https://testjira.in.ys4fun.com/rest/api/2/component/10000",
+					"id": "10000",
+					"name": "策划专业"
+				}
+			],
+			"timeoriginalestimate": null,
+			"description": null,
+			"attachment": [
+
+			],
+			"aggregatetimeestimate": null,
+			"summary": "测试 Slack 个人通知",
+			"creator": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=zxc",
+				"name": "zxc",
+				"key": "zxc",
+				"emailAddress": "82403008@qq.com",
+				"avatarUrls": {
+					"48x48": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=48",
+					"24x24": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=24",
+					"16x16": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=16",
+					"32x32": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=32"
+				},
+				"displayName": "木木",
+				"active": true,
+				"timeZone": "Asia/Shanghai"
+			},
+			"subtasks": [
+
+			],
+			"reporter": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=zxc",
+				"name": "zxc",
+				"key": "zxc",
+				"emailAddress": "82403008@qq.com",
+				"avatarUrls": {
+					"48x48": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=48",
+					"24x24": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=24",
+					"16x16": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=16",
+					"32x32": "https://www.gravatar.com/avatar/d3adcea752bdb2c4dd9a4cd052e98b7a?d=mm&s=32"
+				},
+				"displayName": "木木",
+				"active": true,
+				"timeZone": "Asia/Shanghai"
+			},
+			"customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@40534b6b[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@663a1d30[overall=com.atlassian.jira.plugin.devstatus.summary.beans.PullRequestOverallBean@1be3c513[stateCount=0,state=OPEN,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@65de8359[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@3f8c949a[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@9e9ddc6[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@c275ab5[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@1d72c423[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@4601ab53[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@1c149b8[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@378559c7[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@3c5dd0c8[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@774daf23[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10200": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=%E6%B5%8B%E8%AF%95",
+				"name": "测试",
+				"key": "测试",
+				"emailAddress": "2222@qq.com",
+				"avatarUrls": {
+					"48x48": "https://www.gravatar.com/avatar/a0a85b209af137135508d6aec8669be6?d=mm&s=48",
+					"24x24": "https://www.gravatar.com/avatar/a0a85b209af137135508d6aec8669be6?d=mm&s=24",
+					"16x16": "https://www.gravatar.com/avatar/a0a85b209af137135508d6aec8669be6?d=mm&s=16",
+					"32x32": "https://www.gravatar.com/avatar/a0a85b209af137135508d6aec8669be6?d=mm&s=32"
+				},
+				"displayName": "测试",
+				"active": true,
+				"timeZone": "Asia/Shanghai"
+			},
+			"customfield_10201": null,
+			"customfield_10400": "{}",
+			"environment": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"comment": {
+				"comments": [
+					{
+						"self": "https://testjira.in.ys4fun.com/rest/api/2/issue/10902/comment/10213",
+						"id": "10213",
+						"author": {
+							"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=admin",
+							"name": "admin",
+							"key": "admin",
+							"emailAddress": "zhangxianchun@ys4fun.com",
+							"avatarUrls": {
+								"48x48": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=48",
+								"24x24": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=24",
+								"16x16": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=16",
+								"32x32": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=32"
+							},
+							"displayName": "admin",
+							"active": true,
+							"timeZone": "Asia/Shanghai"
+						},
+						"body": "456",
+						"updateAuthor": {
+							"self": "https://testjira.in.ys4fun.com/rest/api/2/user?username=admin",
+							"name": "admin",
+							"key": "admin",
+							"emailAddress": "zhangxianchun@ys4fun.com",
+							"avatarUrls": {
+								"48x48": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=48",
+								"24x24": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=24",
+								"16x16": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=16",
+								"32x32": "https://www.gravatar.com/avatar/4488fb3520381d06566528e6e083768f?d=mm&s=32"
+							},
+							"displayName": "admin",
+							"active": true,
+							"timeZone": "Asia/Shanghai"
+						},
+						"created": "2021-02-24T14:44:13.000+0800",
+						"updated": "2021-02-24T14:44:13.000+0800"
+					}
+				],
+				"maxResults": 1,
+				"total": 1,
+				"startAt": 0
+			},
+			"votes": {
+				"self": "https://testjira.in.ys4fun.com/rest/api/2/issue/YS01-44/votes",
+				"votes": 0,
+				"hasVoted": false
+			},
+			"worklog": {
+				"startAt": 0,
+				"maxResults": 20,
+				"total": 0,
+				"worklogs": [
+
+				]
+			}
+		}
+	}
+}
