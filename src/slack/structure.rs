@@ -18,9 +18,6 @@ impl AppMsg {
     pub fn new(blocks: Vec<Block>) -> Self {
         AppMsg { blocks }
     }
-    // pub fn push_block(&mut self, b: Block) {
-    //     self.blocks.push(b)
-    // }
 }
 
 #[derive(Deserialize, Serialize, Debug)]
