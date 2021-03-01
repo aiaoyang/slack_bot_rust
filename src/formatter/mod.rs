@@ -22,25 +22,25 @@ impl ToString for Vec<String> {
     }
 }
 
-// macro_rules! test_func {
-//     ($source:expr, $expect:expr, $func_name:ident) => {
-//         let mut src: Vec<String> = vec![$source];
-//         src.$func_name();
-//         if let Some(v) = src.get(0) {
-//             assert_eq!($expect, v.clone());
-//         };
-//     };
-// }
+macro_rules! test_func {
+    ($source:expr, $expect:expr, $func_name:ident) => {
+        let mut src: Vec<String> = vec![$source];
+        src.$func_name();
+        if let Some(v) = src.get(0) {
+            assert_eq!($expect, v.clone());
+        };
+    };
+}
 
-// #[test]
-// fn test() {
-//     test_func!("result".to_string(), "\n>result".to_string(), line);
-//     test_func!("result".to_string(), "#result".to_string(), bold);
-//     test_func!("result".to_string(), "`result`".to_string(), code);
-//     test_func!("result".to_string(), "<result>".to_string(), link);
-//     test_func!("result".to_string(), "result\n".to_string(), enter);
-//     test_func!("result".to_string(), "result\t".to_string(), tab);
+#[test]
+fn test() {
+    test_func!("result".to_string(), "\n>result".to_string(), line);
+    test_func!("result".to_string(), "#result".to_string(), bold);
+    test_func!("result".to_string(), "`result`".to_string(), code);
+    test_func!("result".to_string(), "<result>".to_string(), link);
+    test_func!("result".to_string(), "result\n".to_string(), enter);
+    test_func!("result".to_string(), "result\t".to_string(), tab);
 
-//     let v: Vec<String> = vec!["123".into(), "456".into()];
-//     assert_eq!("123456".to_string(), v.to_string());
-// }
+    let v: Vec<String> = vec!["123".into(), "456".into()];
+    assert_eq!("123456".to_string(), v.to_string());
+}

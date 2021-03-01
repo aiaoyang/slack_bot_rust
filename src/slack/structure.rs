@@ -47,7 +47,7 @@ impl AppMsg {
 
         header_map.insert(
             "Authorization",
-            "Bearer xoxb-1626838453092-1657930941057-Nlx7xJiF4CRer7hjgLURCaqz"
+            "Bearer xoxb-1626838453092-1657930941057-hrPGBjkLxctKYkc60jFJzS3x"
                 .parse()
                 .unwrap(),
         );
