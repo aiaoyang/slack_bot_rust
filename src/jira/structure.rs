@@ -85,6 +85,9 @@ pub struct IssueFields {
 pub struct User {
     #[serde(rename = "displayName")]
     pub(crate) display_name: String,
+
+    #[serde(rename = "name")]
+    pub(crate) name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

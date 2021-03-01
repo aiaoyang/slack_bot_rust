@@ -1,4 +1,3 @@
-extern crate slack_bot;
 use slack_bot::context::MyContext;
 use slack_bot::jira::structure::JiraHookInfo;
 use slack_bot::slack::generator::gen_msg;
@@ -27,6 +26,9 @@ async fn jira_hook(info: String) -> Result<HttpResponse, Error> {
             let app_msg = gen_msg(&ct, &json_str);
             if let Ok(encode_json_str) = serde_json::to_string(&app_msg) {
                 println!("{}", encode_json_str);
+                if let Ok(result) = app_msg.send() {
+                    println!("{:#?}", result.text());
+                }
             } else {
                 println!("{}", "error");
             }

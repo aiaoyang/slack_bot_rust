@@ -1,3 +1,5 @@
+use reqwest::blocking::{Client, Response};
+use reqwest::{header::HeaderMap, Error};
 use serde::{Deserialize, Serialize};
 
 const SECTION: &'static str = "section";
@@ -8,16 +10,59 @@ trait Context {
     fn to_string() -> String;
     fn todo();
 }
+impl<'a> Msg<'a> {
+    fn new(channel: &'a str, text: &'a str, app_msg: AppMsg) -> Self {
+        Msg {
+            channel,
+            text,
+            app_msg,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
-pub struct AppMsg {
-    #[serde(rename = "blocks")]
-    blocks: Vec<Block>,
+struct Msg<'a> {
+    #[serde(rename = "channel")]
+    channel: &'a str,
+
+    #[serde(rename = "text")]
+    text: &'a str,
+
+    #[serde(flatten)]
+    app_msg: AppMsg,
 }
 
 impl AppMsg {
     pub fn new(blocks: Vec<Block>) -> Self {
         AppMsg { blocks }
     }
+    pub fn send(self) -> Result<Response, Error> {
+        let c = Client::new();
+        let mut header_map = HeaderMap::new();
+
+        header_map.insert(
+            "Content-Type",
+            "application/json;charset=utf-8".parse().unwrap(),
+        );
+
+        header_map.insert(
+            "Authorization",
+            "Bearer xoxb-1626838453092-1657930941057-Nlx7xJiF4CRer7hjgLURCaqz"
+                .parse()
+                .unwrap(),
+        );
+
+        c.post("https://slack.com/api/chat.postMessage")
+            .headers(header_map)
+            .json(&Msg::new("U01JERHHPEY", "text", self))
+            .send()
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct AppMsg {
+    #[serde(rename = "blocks")]
+    blocks: Vec<Block>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]

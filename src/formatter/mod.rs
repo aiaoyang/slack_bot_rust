@@ -1,11 +1,11 @@
 use crate::{define_func, define_impl, define_trait};
 define_trait! {
-    Bold  => fn bold(&mut self);,
-    Code  => fn code(&mut self);,
-    Enter => fn enter(&mut self);,
-    Line  => fn line(&mut self);,
-    Link  => fn link(&mut self);,
-    Tab   => fn tab(&mut self);,
+    Bold  => fn bold(&mut self)->Self;,
+    Code  => fn code(&mut self)->Self;,
+    Enter => fn enter(&mut self)->Self;,
+    Line  => fn line(&mut self)->Self;,
+    Link  => fn link(&mut self)->Self;,
+    Tab   => fn tab(&mut self)->Self;,
     ToString => fn to_string(&self)->String;,
 }
 

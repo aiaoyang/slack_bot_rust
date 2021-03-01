@@ -1,3 +1,4 @@
+extern crate regex;
 use super::structure::JiraHookInfo;
 
 pub trait JiraInterface {
@@ -42,20 +43,20 @@ impl JiraInterface for JiraHookInfo {
     }
     fn assignee(&self) -> (String, String) {
         (
-            self.issue.fields.assignee.display_name.clone(),
+            self.issue.fields.assignee.name.clone(),
             self.issue.fields.assignee.display_name.clone(),
         )
     }
     fn reporter(&self) -> (String, String) {
         (
-            self.issue.fields.reporter.display_name.clone(),
+            self.issue.fields.reporter.name.clone(),
             self.issue.fields.reporter.display_name.clone(),
         )
     }
     fn checker(&self) -> Option<(String, String)> {
         match &self.issue.fields.checker {
-            Some(user) => return Some((user.display_name.clone(), user.display_name.clone())),
             None => return None,
+            Some(user) => return Some((user.name.clone(), user.display_name.clone())),
         }
     }
     fn summary(&self) -> Option<String> {
@@ -63,12 +64,13 @@ impl JiraInterface for JiraHookInfo {
     }
     fn comment(&self) -> Option<String> {
         match &self.comment {
-            Some(comment) => return Some(comment.body.clone()),
             None => return None,
+            Some(comment) => return Some(comment.body.clone()),
         }
     }
     fn model(&self) -> Option<String> {
         match &self.issue.fields.components {
+            None => return None,
             Some(components) => {
                 return Some(
                     components
@@ -76,18 +78,26 @@ impl JiraInterface for JiraHookInfo {
                         .fold("".to_string(), |acc, item| acc + &item.name),
                 )
             }
-            None => return None,
         }
     }
     fn sprint(&self) -> Option<String> {
         match &self.issue.fields.sprint {
             None => return None,
             Some(sprint) => {
+                let reg = regex::Regex::new(r"(Sprint+ \d+\.\d+\.\d+)").unwrap();
+
                 return Some(
                     sprint
                         .into_iter()
-                        .fold("".to_string(), |acc, item| acc + &item),
-                )
+                        .map(|v| {
+                            if let Some(res) = reg.find(v) {
+                                return res.as_str();
+                            } else {
+                                return "";
+                            }
+                        })
+                        .fold("".to_string(), |acc, item| acc + item),
+                );
             }
         }
     }
@@ -103,4 +113,11 @@ impl JiraInterface for JiraHookInfo {
             }
         }
     }
+}
+
+#[test]
+fn test_re() {
+    let reg = regex::Regex::new(r"(Sprint+ \d+\.\d+\.\d+)").unwrap();
+    let cap=reg.find("com.atlassian.greenhopper.service.sprint.Sprint@9254288[id=54,rapidViewId=16,state=FUTURE,name=Sprint 2021.03.12,startDate=<null>,endDate=<null>,completeDate=<null>,sequence=54,goal=<null>]").unwrap();
+    println!("reg: {:#?}", cap.as_str());
 }

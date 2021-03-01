@@ -2,6 +2,7 @@ use std::vec;
 
 use crate::context::Context;
 use crate::formatter::ToString;
+use crate::formatter::*;
 use crate::jira::traits::JiraInterface;
 use crate::slack::structure::{AppMsg, Block};
 
@@ -34,25 +35,31 @@ fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
         "-".into(),
         j.issue_id(),
         "-".into(),
-        j.summary().unwrap_or("".to_string()),
+        j.summary().unwrap_or("无描述".to_string()),
     ]
     .to_string()
 }
 
 fn issue_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
     let v = vec![
-        "状态:".to_string(),
-        j.status(),
-        "优先级:".to_string(),
-        j.priority(),
-        "类型:".to_string(),
-        j.issue_type(),
-        "模块:".to_string(),
-        j.model().unwrap_or("none".to_string()),
-        "修复的版本:".to_string(),
-        j.fix_versions().unwrap_or("none".to_string()),
-        "sprint:".to_string(),
-        j.sprint().unwrap_or("none".to_string()),
+        //
+        "\t状态:".to_string(),
+        j.status().code(),
+        //
+        "\t优先级:".to_string(),
+        j.priority().bold(),
+        //
+        "\n\t类型:".to_string(),
+        j.issue_type().bold(),
+        //
+        "\t模块:".to_string(),
+        j.model().unwrap_or("无".to_string()),
+        //
+        "\n\t修复的版本:".to_string(),
+        j.fix_versions().unwrap_or("无".to_string()),
+        //
+        "\tsprint:".to_string(),
+        j.sprint().unwrap_or("无".to_string()),
     ];
 
     v.to_string()
@@ -72,9 +79,9 @@ fn users_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
     let v = vec![
         "经办人:".to_string(),
         assignee_display_name,
-        "报告人:".to_string(),
+        "\t报告人:".to_string(),
         reporter_display_name,
-        "验收人:".to_string(),
+        "\t验收人:".to_string(),
         checker_display_name,
     ];
 
