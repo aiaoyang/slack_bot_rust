@@ -1,3 +1,6 @@
-mod formatter;
+pub mod context;
 pub mod jira;
-mod slack;
+pub mod macros;
+pub mod slack;
+
+mod formatter;

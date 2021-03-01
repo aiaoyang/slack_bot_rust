@@ -8,24 +8,22 @@ trait Context {
     fn to_string() -> String;
     fn todo();
 }
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct AppMsg {
     #[serde(rename = "blocks")]
     blocks: Vec<Block>,
 }
 
 impl AppMsg {
-    pub fn new(block: Block) -> Self {
-        AppMsg {
-            blocks: vec![block],
-        }
+    pub fn new(blocks: Vec<Block>) -> Self {
+        AppMsg { blocks }
     }
-    pub fn push_block(&mut self, b: Block) {
-        self.blocks.push(b);
-    }
+    // pub fn push_block(&mut self, b: Block) {
+    //     self.blocks.push(b)
+    // }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Block {
     #[serde(rename = "type")]
     self_type: String,
@@ -37,7 +35,7 @@ pub struct Block {
     fields: Option<Vec<Text>>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 struct Text {
     #[serde(rename = "type")]
     slack_type: String,
@@ -45,7 +43,7 @@ struct Text {
     #[serde(rename = "content")]
     content: String,
 }
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 struct Divider {
     #[serde(rename = "type")]
     self_type: String,

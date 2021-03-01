@@ -9,7 +9,7 @@ pub struct JiraHookInfo {
     pub(crate) issue_event_type_name: Option<String>,
 
     #[serde(rename = "issue")]
-    pub(crate) issue: Option<Issue>,
+    pub(crate) issue: Issue,
 
     #[serde(rename = "changelog")]
     pub(crate) chang_log: Option<ChangeLog>,
@@ -55,7 +55,7 @@ pub struct IssueFields {
     pub(crate) issue_type: IssueType,
 
     #[serde(rename = "fixVersions")]
-    pub(crate) fix_versions: Vec<FixVersion>,
+    pub(crate) fix_versions: Option<Vec<FixVersion>>,
     #[serde(rename = "priority")]
     pub(crate) priority: Priority,
 
@@ -75,7 +75,7 @@ pub struct IssueFields {
     pub(crate) sprint: Option<Vec<String>>,
 
     #[serde(rename = "summary")]
-    pub(crate) summary: String,
+    pub(crate) summary: Option<String>,
 
     #[serde(rename = "reporter")]
     pub(crate) reporter: User,

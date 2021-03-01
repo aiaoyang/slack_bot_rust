@@ -1,5 +1,7 @@
 extern crate slack_bot;
 use actix_web::{post, App, Error, HttpResponse, HttpServer, Result};
+use slack_bot::context::MyContext;
+use slack_bot::slack::gen_msg;
 
 // use serde::{Deserialize, Serialize};
 use slack_bot::jira::structure::JiraHookInfo;
@@ -18,6 +20,10 @@ async fn jira_hook(info: String) -> Result<HttpResponse, Error> {
     match json_decode {
         Ok(json_str) => {
             println!("json string: {:#?}", json_str);
+
+            let ct = MyContext { s: "".to_string() };
+            let app_msg = gen_msg(&ct, &json_str);
+            println!("{:#?}", app_msg);
         }
         Err(error) => {
             println!("Error: {}", error);
