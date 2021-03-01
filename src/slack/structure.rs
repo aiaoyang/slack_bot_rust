@@ -40,8 +40,8 @@ struct Text {
     #[serde(rename = "type")]
     slack_type: String,
 
-    #[serde(rename = "content")]
-    content: String,
+    #[serde(rename = "text")]
+    text: String,
 }
 #[derive(Deserialize, Serialize, Debug)]
 struct Divider {
@@ -61,7 +61,7 @@ impl Block {
             self_type: SECTION.into(),
             text: Some(Text {
                 slack_type: MARKDOWN.into(),
-                content: c,
+                text: c,
             }),
             fields: None,
         }
@@ -74,7 +74,7 @@ impl Block {
     {
         let mut fields_tmp: Vec<Text> = Vec::new();
 
-        for content in fields
+        for text in fields
             .iter()
             .map(|text| {
                 let string_text: String = text.clone().into();
@@ -84,7 +84,7 @@ impl Block {
         {
             &fields_tmp.push(Text {
                 slack_type: MARKDOWN.into(),
-                content,
+                text,
             });
         }
 

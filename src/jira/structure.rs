@@ -62,7 +62,7 @@ pub struct IssueFields {
     #[serde(rename = "customfield_10100")]
     pub(crate) checker: Option<User>,
 
-    #[serde(rename = "assginee")]
+    #[serde(rename = "assignee")]
     pub(crate) assignee: User,
 
     #[serde(rename = "status")]
