@@ -24,11 +24,9 @@ impl ToString for Vec<String> {
 
 macro_rules! test_func {
     ($source:expr, $expect:expr, $func_name:ident) => {
-        let mut src: Vec<String> = vec![$source];
+        let mut src: String = $source;
         src.$func_name();
-        if let Some(v) = src.get(0) {
-            assert_eq!($expect, v.clone());
-        };
+        assert_eq!($expect, src.clone());
     };
 }
 
