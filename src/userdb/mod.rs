@@ -15,8 +15,6 @@ fn ldap_users() -> HashMap<String, String> {
         &codes::versions::LDAP_VERSION2,
     );
 
-    // ldap_c.simple_bind("yangjiangdong", "AIAO*631+").unwrap();
-
     let res = ldap_c
         .simple_search("ou=yongshi,dc=ys4fun,dc=com", codes::scopes::LDAP_SCOPE_SUB)
         .unwrap();
