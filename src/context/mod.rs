@@ -3,13 +3,13 @@ pub trait Context {
     fn todo();
 }
 pub struct MyContext {
-    pub s: String,
+    s: String,
 }
-// impl MyContext {
-//     fn from(s: String) -> Self {
-//         MyContext { s }
-//     }
-// }
+impl MyContext {
+    pub fn from(s: String) -> Self {
+        MyContext { s }
+    }
+}
 
 impl Context for MyContext {
     fn to_string(&self) -> String {

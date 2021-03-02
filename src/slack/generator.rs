@@ -1,10 +1,25 @@
-use std::vec;
+use std::{collections::HashMap, vec};
 
 use crate::context::Context;
 use crate::formatter::ToString;
 use crate::formatter::*;
 use crate::jira::traits::JiraInterface;
 use crate::slack::structure::{AppMsg, Block};
+
+use lazy_static::lazy_static;
+
+lazy_static! {
+    pub static ref ACTION_HASHMAP: HashMap<String, String> = {
+        let mut hm: HashMap<String, String> = HashMap::new();
+        hm.insert("issue_created".to_string(), "创建问题".to_string());
+        hm.insert("issue_resolved".to_string(), "解决问题".to_string());
+        hm.insert("issue_commented".to_string(), "添加评论".to_string());
+        hm.insert("issue_closed".to_string(), "关闭问题".to_string());
+        hm.insert("issue_reopened".to_string(), "重开问题".to_string());
+        hm.insert("issue_assigned".to_string(), "修改经办人".to_string());
+        hm
+    };
+}
 
 pub fn gen_msg<T, J>(c: &T, j: &J) -> AppMsg
 where
@@ -19,29 +34,35 @@ where
     T: Context,
     J: JiraInterface,
 {
-    vec![
-        Block::new_text(vec![action_field_string(c, j)].to_string()),
-        Block::new_text(vec![issue_field_string(c, j)].to_string()),
-        Block::new_text(vec![users_field_string(c, j)].to_string()),
-        Block::new_divider(),
-    ]
+    if let Some(ref event_type) = j.event_type() {
+        if let Some(_) = ACTION_HASHMAP.get(event_type) {
+            let mut blocks = vec![
+                Block::new_text(vec![action_field_string(c, j)].to_string()),
+                Block::new_text(vec![issue_field_string(c, j)].to_string()),
+                Block::new_text(vec![users_field_string(c, j)].to_string()),
+                Block::new_divider(),
+            ];
+            if let Some(c) = j.comment() {
+                blocks.insert(1, Block::new_text(vec![c].to_string()));
+            }
+            return blocks;
+        }
+    }
+
+    return Vec::new();
 }
 
 fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
+    let mut action = if let Some(ref event_type) = j.event_type() {
+        ACTION_HASHMAP.get(event_type).unwrap().to_owned()
+    } else {
+        "未定义行为".to_string()
+    };
     let link_str = j
         .issue_id()
         .link(format!("{}", j.summary().unwrap_or("".to_string()).as_str()).as_str());
 
-    vec![
-        _c.to_string(),
-        "-".into(),
-        j.hook_event(),
-        "-".into(),
-        j.issue_id(),
-        "-".into(),
-        link_str,
-    ]
-    .to_string()
+    vec![_c.to_string().tab(), action.tab(), link_str].to_string()
 }
 
 fn issue_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
