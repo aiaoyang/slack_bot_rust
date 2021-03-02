@@ -28,6 +28,14 @@ where
 }
 
 fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
+    let link_str = j.issue_id().link(
+        format!(
+            "{}-{}",
+            j.issue_id().as_str(),
+            j.summary().unwrap_or("".to_string()).as_str()
+        )
+        .as_str(),
+    );
     vec![
         _c.to_string(),
         "-".into(),
@@ -35,7 +43,7 @@ fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
         "-".into(),
         j.issue_id(),
         "-".into(),
-        j.summary().unwrap_or("无描述".to_string()),
+        link_str,
     ]
     .to_string()
 }
@@ -43,19 +51,19 @@ fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
 fn issue_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
     let v = vec![
         //
-        "\t状态:".to_string(),
+        "\n>状态:".to_string(),
         j.status().code(),
         //
         "\t优先级:".to_string(),
         j.priority().bold(),
         //
-        "\n\t类型:".to_string(),
+        "\n>类型:".to_string(),
         j.issue_type().bold(),
         //
         "\t模块:".to_string(),
         j.model().unwrap_or("无".to_string()),
         //
-        "\n\t修复的版本:".to_string(),
+        "\n>修复的版本:".to_string(),
         j.fix_versions().unwrap_or("无".to_string()),
         //
         "\tsprint:".to_string(),

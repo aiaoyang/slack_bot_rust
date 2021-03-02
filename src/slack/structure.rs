@@ -36,7 +36,7 @@ impl AppMsg {
     pub fn new(blocks: Vec<Block>) -> Self {
         AppMsg { blocks }
     }
-    pub fn send(self) -> Result<Response, Error> {
+    pub fn send(self, user_channel_name: &str) -> Result<Response, Error> {
         let c = Client::new();
         let mut header_map = HeaderMap::new();
 
@@ -47,14 +47,14 @@ impl AppMsg {
 
         header_map.insert(
             "Authorization",
-            "Bearer xoxb-1626838453092-1657930941057-hrPGBjkLxctKYkc60jFJzS3x"
+            "Bearer xoxb-1626838453092-1657930941057-r4g8fIz2k6GArfq3tc2l0Y5g"
                 .parse()
                 .unwrap(),
         );
 
         c.post("https://slack.com/api/chat.postMessage")
             .headers(header_map)
-            .json(&Msg::new("U01JERHHPEY", "text", self))
+            .json(&Msg::new(user_channel_name, "text", self))
             .send()
     }
 }
