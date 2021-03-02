@@ -1,5 +1,5 @@
 extern crate regex;
-use super::structure::JiraHookInfo;
+use crate::jira::structure::JiraHookInfo;
 
 pub trait JiraInterface {
     fn hook_event(&self) -> String;

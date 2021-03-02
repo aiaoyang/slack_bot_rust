@@ -28,14 +28,10 @@ where
 }
 
 fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
-    let link_str = j.issue_id().link(
-        format!(
-            "{}-{}",
-            j.issue_id().as_str(),
-            j.summary().unwrap_or("".to_string()).as_str()
-        )
-        .as_str(),
-    );
+    let link_str = j
+        .issue_id()
+        .link(format!("{}", j.summary().unwrap_or("".to_string()).as_str()).as_str());
+
     vec![
         _c.to_string(),
         "-".into(),

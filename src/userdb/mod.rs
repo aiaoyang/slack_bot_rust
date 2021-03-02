@@ -1,7 +1,6 @@
-extern crate openldap;
-
 use std::collections::HashMap;
 
+extern crate openldap;
 use openldap::*;
 
 pub fn get_users() -> HashMap<String, String> {

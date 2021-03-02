@@ -1,3 +1,7 @@
+use crate::context::Context;
+use crate::jira::traits::JiraInterface;
+use crate::slack::generator::gen_all_block;
+
 use reqwest::blocking::{Client, Response};
 use reqwest::{header::HeaderMap, Error};
 use serde::{Deserialize, Serialize};
@@ -6,10 +10,6 @@ const SECTION: &'static str = "section";
 const DIVIDER: &'static str = "divider";
 const MARKDOWN: &'static str = "mrkdwn";
 
-trait Context {
-    fn to_string() -> String;
-    fn todo();
-}
 impl<'a> Msg<'a> {
     fn new(channel: &'a str, text: &'a str, app_msg: AppMsg) -> Self {
         Msg {
@@ -20,7 +20,7 @@ impl<'a> Msg<'a> {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 struct Msg<'a> {
     #[serde(rename = "channel")]
     channel: &'a str,
@@ -36,6 +36,17 @@ impl AppMsg {
     pub fn new(blocks: Vec<Block>) -> Self {
         AppMsg { blocks }
     }
+
+    pub fn from<T, J>(c: &T, j: &J) -> Self
+    where
+        T: Context,
+        J: JiraInterface,
+    {
+        AppMsg {
+            blocks: gen_all_block(c, j),
+        }
+    }
+
     pub fn send(self, user_channel_name: &str) -> Result<Response, Error> {
         let c = Client::new();
         let mut header_map = HeaderMap::new();
@@ -59,13 +70,13 @@ impl AppMsg {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct AppMsg {
     #[serde(rename = "blocks")]
     blocks: Vec<Block>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Block {
     #[serde(rename = "type")]
     self_type: String,
@@ -77,7 +88,7 @@ pub struct Block {
     fields: Option<Vec<Text>>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 struct Text {
     #[serde(rename = "type")]
     slack_type: String,
