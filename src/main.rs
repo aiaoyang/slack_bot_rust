@@ -16,6 +16,7 @@ use actix_web::{post, App, Error, HttpRequest, HttpResponse, HttpServer, Result}
 
 lazy_static! {
     static ref HASHCONFIG: HashMap<String, String> = get_users();
+    static ref SLACK_CHANNEL: HashMap<String, String> = SlackUserList::new().unwrap();
 }
 
 #[actix_web::main]
@@ -35,12 +36,10 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
     let default_action_user = "JIRA机器人".to_string();
     let action_user = HASHCONFIG.get(action_user).unwrap_or(&default_action_user);
 
-    let slack_user_channel = SlackUserList::new().unwrap();
+    let zhangxianchun = SLACK_CHANNEL.get("zhangxianchun").unwrap();
+    let yangjiangdong = SLACK_CHANNEL.get("yangjiangdong").unwrap();
 
-    let zhangxianchun = slack_user_channel.get("zhangxianchun").unwrap();
-    let yangjiangdong = slack_user_channel.get("yangjiangdong").unwrap();
-
-    let to_user = slack_user_channel.get(&jira_info.assignee().0);
+    let to_user = SLACK_CHANNEL.get(&jira_info.assignee().0);
     println!("action_user: {}, send_to: {:#?}", &action_user, &to_user);
 
     let ctx = MyContext::from(action_user.to_string());
