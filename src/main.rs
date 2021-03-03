@@ -37,25 +37,28 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
 
     let slack_user_channel = SlackUserList::new().unwrap();
 
-    let default_to_user = slack_user_channel.get("yangjiangdong").unwrap();
-    let to_user = slack_user_channel
-        .get(&jira_info.assignee().0)
-        .unwrap_or(&default_to_user);
+    let zhangxianchun = slack_user_channel.get("zhangxianchun").unwrap();
+    let yangjiangdong = slack_user_channel.get("yangjiangdong").unwrap();
 
-    println!("action_user: {}, send_to: {}", &action_user, &to_user);
+    let to_user = slack_user_channel.get(&jira_info.assignee().0);
+    println!("action_user: {}, send_to: {:#?}", &action_user, &to_user);
 
     let ctx = MyContext::from(action_user.to_string());
 
-    let app_msg = AppMsg::from(&ctx, &jira_info.0);
-
-    if let Ok(_) = serde_json::to_string(&app_msg) {
-        if let Ok(result) = app_msg.send(to_user) {
-            println!("{:#?}", result.status());
-        } else {
-            println!("send to slack error");
+    match AppMsg::from(&ctx, &jira_info.0) {
+        Some(app_msg) => {
+            if let Ok(_) = serde_json::to_string(&app_msg) {
+                if let Ok(_) = app_msg.send(&yangjiangdong) {}
+                if let Ok(_) = app_msg.send(&zhangxianchun) {}
+                match to_user {
+                    Some(user) => if let Ok(_) = app_msg.send(&user) {},
+                    None => (),
+                }
+            } else {
+                println!("{}", "error");
+            }
         }
-    } else {
-        println!("{}", "error");
+        None => (),
     }
 
     Ok(HttpResponse::Ok().body("response"))

@@ -37,13 +37,14 @@ impl AppMsg {
         AppMsg { blocks }
     }
 
-    pub fn from<T, J>(c: &T, j: &J) -> Self
+    pub fn from<T, J>(c: &T, j: &J) -> Option<Self>
     where
         T: Context,
         J: JiraInterface,
     {
-        AppMsg {
-            blocks: gen_all_block(c, j).unwrap(),
+        match gen_all_block(c, j) {
+            Some(blocks) => return Some(AppMsg { blocks }),
+            None => return None,
         }
     }
 

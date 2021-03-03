@@ -21,12 +21,15 @@ lazy_static! {
     };
 }
 
-pub fn gen_msg<T, J>(c: &T, j: &J) -> AppMsg
+pub fn gen_msg<T, J>(c: &T, j: &J) -> Option<AppMsg>
 where
     T: Context,
     J: JiraInterface,
 {
-    AppMsg::new(gen_all_block(c, j).unwrap())
+    if let Some(app_msg) = gen_all_block(c, j) {
+        return Some(AppMsg::new(app_msg));
+    }
+    None
 }
 
 pub fn gen_all_block<T, J>(c: &T, j: &J) -> Option<Vec<Block>>
@@ -82,60 +85,37 @@ fn issue_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
 
     let v = vec![
         //
-        "状态:".to_string().line(),
+        "状态: ".to_string().line(),
         j.status().code(),
         //
-        "\t优先级:".to_string(),
+        "\t优先级: ".to_string(),
         j.priority().bold(),
         //
-        "类型:".to_string().line(),
+        "类型: ".to_string().line(),
         j.issue_type().bold(),
         //
-        "\t模块:".to_string(),
+        "\t模块: ".to_string(),
         j.model().unwrap_or("无".to_string()),
         //
-        "修复的版本:".to_string().line(),
+        "修复的版本: ".to_string().line(),
         j.fix_versions().unwrap_or("无".to_string()),
         //
-        "\tsprint:".to_string(),
+        "\tsprint: ".to_string(),
         //
         j.sprint().unwrap_or("无".to_string()),
         //
-        "经办人:".to_string().line(),
+        "经办人: ".to_string().line(),
         //
         assignee_display_name,
         //
-        "\t报告人:".to_string(),
+        "\t报告人: ".to_string(),
         //
         reporter_display_name,
         //
-        "\t验收人:".to_string(),
+        "\t验收人: ".to_string(),
         //
         checker_display_name,
     ];
 
     v.to_string()
 }
-
-// fn users_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
-//     let (
-//         (_assignee_name, assignee_display_name),
-//         (_reporter_name, reporter_display_name),
-//         (_checker_name, checker_display_name),
-//     ) = (
-//         j.assignee(),
-//         j.reporter(),
-//         j.checker().unwrap_or(("无".to_string(), "无".to_string())),
-//     );
-
-//     let v = vec![
-//         "经办人:".to_string(),
-//         assignee_display_name,
-//         "\t报告人:".to_string(),
-//         reporter_display_name,
-//         "\t验收人:".to_string(),
-//         checker_display_name,
-//     ];
-
-//     v.to_string().line()
-// }
