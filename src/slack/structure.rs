@@ -47,7 +47,7 @@ impl AppMsg {
         }
     }
 
-    pub fn send(self, user_channel_name: &str) -> Result<Response, Error> {
+    pub fn send(&self, user_channel_name: &str) -> Result<Response, Error> {
         let c = Client::new();
         let mut header_map = HeaderMap::new();
 
@@ -65,7 +65,7 @@ impl AppMsg {
 
         c.post("https://slack.com/api/chat.postMessage")
             .headers(header_map)
-            .json(&Msg::new(user_channel_name, "text", self))
+            .json(&Msg::new(user_channel_name, "text", self.clone()))
             .send()
     }
 }

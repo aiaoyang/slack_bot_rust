@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
-use slack_bot::context::MyContext;
 use slack_bot::jira::structure::JiraHookInfo;
+use slack_bot::slack::channel::SlackUserList;
 use slack_bot::slack::structure::AppMsg;
 use slack_bot::userdb::get_users;
+use slack_bot::{context::MyContext, jira::traits::JiraInterface};
 
 #[macro_use]
 extern crate lazy_static;
@@ -26,7 +27,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 #[post("/jirahook")]
-async fn jira_hook(req: HttpRequest, content: Json<JiraHookInfo>) -> Result<HttpResponse, Error> {
+async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<HttpResponse, Error> {
     let query_str = req.query_string();
     let qs = QString::from(query_str);
 
@@ -34,15 +35,21 @@ async fn jira_hook(req: HttpRequest, content: Json<JiraHookInfo>) -> Result<Http
     let default_action_user = "JIRA机器人".to_string();
     let action_user = HASHCONFIG.get(action_user).unwrap_or(&default_action_user);
 
-    println!("{}", &action_user);
+    let slack_user_channel = SlackUserList::new().unwrap();
+
+    let default_to_user = slack_user_channel.get("yangjiangdong").unwrap();
+    let to_user = slack_user_channel
+        .get(&jira_info.assignee().0)
+        .unwrap_or(&default_to_user);
+
+    println!("action_user: {}, send_to: {}", &action_user, &to_user);
 
     let ctx = MyContext::from(action_user.to_string());
 
-    let app_msg = AppMsg::from(&ctx, &content.0);
+    let app_msg = AppMsg::from(&ctx, &jira_info.0);
 
     if let Ok(_) = serde_json::to_string(&app_msg) {
-        // println!("{}", encode_json_str);
-        if let Ok(result) = app_msg.send("U01JERHHPEY") {
+        if let Ok(result) = app_msg.send(to_user) {
             println!("{:#?}", result.status());
         } else {
             println!("send to slack error");
