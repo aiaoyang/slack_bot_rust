@@ -57,7 +57,7 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
                 println!("{}", "error");
             }
         }
-        None => (),
+        None => println!("nothing happen"),
     }
 
     Ok(HttpResponse::Ok().body("response"))
