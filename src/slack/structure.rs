@@ -43,7 +43,7 @@ impl AppMsg {
         J: JiraInterface,
     {
         AppMsg {
-            blocks: gen_all_block(c, j),
+            blocks: gen_all_block(c, j).unwrap(),
         }
     }
 
@@ -65,7 +65,7 @@ impl AppMsg {
 
         c.post("https://slack.com/api/chat.postMessage")
             .headers(header_map)
-            .json(&Msg::new(user_channel_name, "text", self.clone()))
+            .json(&Msg::new(user_channel_name, "123", self.clone()))
             .send()
     }
 }
