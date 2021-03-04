@@ -3,7 +3,8 @@ use crate::jira::traits::JiraInterface;
 use crate::slack::generator::gen_all_block;
 
 use reqwest::blocking::{Client, Response};
-use reqwest::{header::HeaderMap, Error};
+use reqwest::header::HeaderMap;
+
 use serde::{Deserialize, Serialize};
 
 const SECTION: &'static str = "section";
@@ -48,7 +49,7 @@ impl AppMsg {
         }
     }
 
-    pub fn send(&self, user_channel_name: &str) -> Result<Response, Error> {
+    pub fn send(&self, user_channel_name: &str) -> Result<Response, ()> {
         let c = Client::new();
         let mut header_map = HeaderMap::new();
 
@@ -64,10 +65,19 @@ impl AppMsg {
                 .unwrap(),
         );
 
-        c.post("https://slack.com/api/chat.postMessage")
-            .headers(header_map)
-            .json(&Msg::new(user_channel_name, "123", self.clone()))
-            .send()
+        if let Some(title) = self.blocks.get(0) {
+            let title: String = title.clone().into();
+            match c
+                .post("https://slack.com/api/chat.postMessage")
+                .headers(header_map)
+                .json(&Msg::new(user_channel_name, &title, self.clone()))
+                .send()
+            {
+                Ok(_) => (),
+                Err(_) => return Err(()),
+            }
+        }
+        Err(())
     }
 }
 
@@ -155,5 +165,15 @@ impl Block {
             text: None,
             fields: None,
         }
+    }
+}
+
+impl From<Block> for String {
+    fn from(b: Block) -> Self {
+        let t_struct = b.text.unwrap_or(Text {
+            slack_type: "".to_string(),
+            text: "".to_string(),
+        });
+        t_struct.text
     }
 }

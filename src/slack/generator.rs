@@ -54,12 +54,13 @@ where
     None
 }
 
-fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
+pub(self) fn action_field_string<T: Context, J: JiraInterface>(_c: &T, j: &J) -> String {
     let mut action = if let Some(ref event_type) = j.event_type() {
         ACTION_HASHMAP.get(event_type).unwrap().to_owned()
     } else {
         "未定义行为".to_string()
     };
+
     let link_str = j.issue_id().link(
         format!(
             "{}-{}",

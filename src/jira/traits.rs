@@ -96,7 +96,7 @@ impl JiraInterface for JiraHookInfo {
                                 return "";
                             }
                         })
-                        .fold("".to_string(), |acc, item| acc + item),
+                        .fold("".to_string(), |acc, item| acc + "\t" + item),
                 );
             }
         }
@@ -108,7 +108,7 @@ impl JiraInterface for JiraHookInfo {
                 return Some(
                     fix_versions
                         .into_iter()
-                        .fold("".to_string(), |acc, item| acc + &item.name),
+                        .fold("".to_string(), |acc, item| acc + "\t" + &item.name),
                 )
             }
         }
