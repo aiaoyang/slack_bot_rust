@@ -1,4 +1,5 @@
 use crate::{define_impl, define_trait};
+
 define_trait! {
     Bold  => fn bold(&mut self)->Self;,
     Code  => fn code(&mut self)->Self;,

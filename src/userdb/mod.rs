@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-extern crate openldap;
 use openldap::*;
 
 pub fn get_users(url: &str, base_dn: &str) -> HashMap<String, String> {
