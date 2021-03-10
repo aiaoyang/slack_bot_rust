@@ -3,11 +3,13 @@ use std::collections::HashMap;
 use config::*;
 use serde::{Deserialize, Serialize};
 
-use slack_bot::jira::structure::JiraHookInfo;
-use slack_bot::slack::channel::SlackUserList;
-use slack_bot::slack::structure::AppMsg;
-use slack_bot::userdb::get_users;
-use slack_bot::{context::MyContext, jira::traits::JiraInterface};
+use slack_bot::{
+    context::MyContext,
+    jira::{structure::JiraHookInfo, traits::JiraInterface},
+    slack::{channel::SlackUserList, structure::AppMsg},
+    userdb::get_users,
+};
+
 #[macro_use]
 extern crate lazy_static;
 
