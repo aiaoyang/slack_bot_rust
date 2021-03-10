@@ -9,8 +9,6 @@ const SECTION: &'static str = "section";
 const DIVIDER: &'static str = "divider";
 const MARKDOWN: &'static str = "mrkdwn";
 
-// const SLACK_CHANNEL_URL: &'static str = "https://slack.com/api/chat.postMessage";
-
 impl<'a> Msg<'a> {
     fn new(channel: &'a str, text: &'a str, app_msg: AppMsg) -> Self {
         Msg {

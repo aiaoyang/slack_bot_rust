@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use reqwest::{blocking::*, header::HeaderMap};
+use reqwest::{
+    blocking::*,
+    header::{HeaderMap, AUTHORIZATION, CONTENT_TYPE},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -30,14 +33,11 @@ fn get_user_channel(token: &str, url: &str) -> Result<HashMap<String, String>, r
     let c = Client::new();
     let mut headers = HeaderMap::new();
     headers.insert(
-        "Content-Type",
+        CONTENT_TYPE,
         "application/x-www-form-urlencoded".parse().unwrap(),
     );
 
-    headers.insert(
-        "Authorization",
-        format!("Bearer {}", token).parse().unwrap(),
-    );
+    headers.insert(AUTHORIZATION, format!("Bearer {}", token).parse().unwrap());
 
     match c.get(url).headers(headers).send() {
         Ok(resp) => match resp.json::<SlackUserList>() {
