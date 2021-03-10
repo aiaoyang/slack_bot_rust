@@ -45,8 +45,8 @@ where
                 Block::new_text(vec![issue_field_string(c, j)].to_string()),
                 Block::new_divider(),
             ];
-            if let Some(c) = j.comment() {
-                blocks.insert(1, Block::new_text(vec![c].to_string()));
+            if let Some(comment) = j.comment() {
+                blocks.insert(1, Block::new_text(vec![comment].to_string()));
             }
             return Some(blocks);
         }
