@@ -9,7 +9,7 @@ const SECTION: &'static str = "section";
 const DIVIDER: &'static str = "divider";
 const MARKDOWN: &'static str = "mrkdwn";
 
-const SLACK_CHANNEL_URL: &'static str = "https://slack.com/api/chat.postMessage";
+// const SLACK_CHANNEL_URL: &'static str = "https://slack.com/api/chat.postMessage";
 
 impl<'a> Msg<'a> {
     fn new(channel: &'a str, text: &'a str, app_msg: AppMsg) -> Self {
@@ -52,6 +52,7 @@ impl AppMsg {
     pub async fn send(
         &self,
         token: &str,
+        post_url: &str,
         user_channel_name: &str,
     ) -> Result<actix_web::HttpResponse, actix_web::Error> {
         use actix_web::http::header::*;
@@ -60,7 +61,7 @@ impl AppMsg {
 
         if let Some(title) = self.blocks.get(0) {
             let title: String = title.clone().into();
-            if c.post(SLACK_CHANNEL_URL)
+            if c.post(post_url)
                 .set_header(CONTENT_TYPE, "application/json;charset=utf-8")
                 .set_header(AUTHORIZATION, format!("Bearer {}", token))
                 .send_json(&Msg::new(user_channel_name, &title, self.clone()))

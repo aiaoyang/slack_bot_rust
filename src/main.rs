@@ -21,14 +21,27 @@ lazy_static! {
     static ref GLOBAL_CONFIG: MyConfig = MyConfig::new().unwrap();
 
     // 全局用户名哈希表
-    static ref HASHCONFIG: HashMap<String, String> = get_users();
+    static ref HASHCONFIG: HashMap<String, String> = get_users(&GLOBAL_CONFIG.ldap.url, &GLOBAL_CONFIG.ldap.base_dn);
 
     // 全局用户ID哈希表
-    static ref SLACK_CHANNEL: HashMap<String, String> = SlackUserList::new(&GLOBAL_CONFIG.slack.token,&GLOBAL_CONFIG.slack.channel_search_url).unwrap();
+    static ref SLACK_CHANNEL: HashMap<String, String> = SlackUserList::new(
+        &GLOBAL_CONFIG.slack.token,
+        &GLOBAL_CONFIG.slack.channel_search_url
+    ).unwrap();
 }
 #[derive(Debug, Serialize, Deserialize)]
 struct MyConfig {
     slack: Slack,
+    ldap: Ldap,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Ldap {
+    #[serde(rename = "url")]
+    url: String,
+
+    #[serde(rename = "baseDn")]
+    base_dn: String,
 }
 #[derive(Debug, Serialize, Deserialize)]
 struct Slack {
@@ -90,11 +103,25 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
         Some(app_msg) => {
             if let Ok(_) = serde_json::to_string(&app_msg) {
                 for user_id in admin_users {
-                    if let Ok(_) = app_msg.send(&GLOBAL_CONFIG.slack.token, user_id).await {};
+                    if let Ok(_) = app_msg
+                        .send(
+                            &GLOBAL_CONFIG.slack.token,
+                            &GLOBAL_CONFIG.slack.msg_send_url,
+                            user_id,
+                        )
+                        .await
+                    {};
                 }
                 match to_user {
                     Some(user) => {
-                        if let Ok(_) = app_msg.send(&GLOBAL_CONFIG.slack.token, &user).await {}
+                        if let Ok(_) = app_msg
+                            .send(
+                                &GLOBAL_CONFIG.slack.token,
+                                &GLOBAL_CONFIG.slack.msg_send_url,
+                                &user,
+                            )
+                            .await
+                        {}
                     }
                     None => (),
                 }
