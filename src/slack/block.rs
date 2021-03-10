@@ -4,7 +4,7 @@ use crate::context::Context;
 use crate::formatter::ToString;
 use crate::formatter::*;
 use crate::jira::traits::JiraInterface;
-use crate::slack::structure::{AppMsg, Block};
+use crate::slack::structure::Block;
 
 use lazy_static::lazy_static;
 
@@ -17,22 +17,23 @@ lazy_static! {
         hm.insert("issue_closed".to_string(), "关闭问题".to_string());
         hm.insert("issue_reopened".to_string(), "重开问题".to_string());
         hm.insert("issue_assigned".to_string(), "修改经办人".to_string());
+
         hm
     };
 }
 
-pub fn gen_msg<T, J>(c: &T, j: &J) -> Option<AppMsg>
-where
-    T: Context,
-    J: JiraInterface,
-{
-    if let Some(app_msg) = gen_all_block(c, j) {
-        return Some(AppMsg::new(app_msg));
-    }
-    None
-}
+// pub(crate) fn gen_msg<T, J>(c: &T, j: &J) -> Option<AppMsg>
+// where
+//     T: Context,
+//     J: JiraInterface,
+// {
+//     if let Some(app_msg) = gen_all_block(c, j) {
+//         return Some(AppMsg::new(app_msg));
+//     }
+//     None
+// }
 
-pub fn gen_all_block<T, J>(c: &T, j: &J) -> Option<Vec<Block>>
+pub(crate) fn gen_all_block<T, J>(c: &T, j: &J) -> Option<Vec<Block>>
 where
     T: Context,
     J: JiraInterface,
