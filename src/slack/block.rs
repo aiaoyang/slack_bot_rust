@@ -1,10 +1,6 @@
 use std::{collections::HashMap, vec};
 
-use crate::context::Context;
-use crate::formatter::ToString;
-use crate::formatter::*;
-use crate::jira::traits::JiraInterface;
-use crate::slack::structure::Block;
+use crate::{context::Context, formatter::*, jira::traits::JiraInterface, slack::structure::Block};
 
 use lazy_static::lazy_static;
 

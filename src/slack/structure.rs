@@ -1,6 +1,4 @@
-use crate::context::Context;
-use crate::jira::traits::JiraInterface;
-use crate::slack::block::gen_all_block;
+use crate::{context::Context, jira::traits::JiraInterface, slack::block::gen_all_block};
 
 use actix_web::client;
 use serde::{Deserialize, Serialize};
