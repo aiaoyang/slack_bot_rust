@@ -20,12 +20,13 @@ pub struct SlackUser {
 }
 
 impl SlackUserList {
-    pub fn new() -> Result<HashMap<String, String>, reqwest::Error> {
-        get_user_channel()
+    pub fn new(token: &str, url: &str) -> Result<HashMap<String, String>, reqwest::Error> {
+        get_user_channel(token, url)
     }
 }
 
-fn get_user_channel() -> Result<HashMap<String, String>, reqwest::Error> {
+// 获取 用户:用户ID 键值对
+fn get_user_channel(token: &str, url: &str) -> Result<HashMap<String, String>, reqwest::Error> {
     let c = Client::new();
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -35,16 +36,10 @@ fn get_user_channel() -> Result<HashMap<String, String>, reqwest::Error> {
 
     headers.insert(
         "Authorization",
-        "Bearer xoxb-1626838453092-1657930941057-r4g8fIz2k6GArfq3tc2l0Y5g"
-            .parse()
-            .unwrap(),
+        format!("Bearer {}", token).parse().unwrap(),
     );
 
-    match c
-        .get("https://slack.com/api/users.list")
-        .headers(headers)
-        .send()
-    {
+    match c.get(url).headers(headers).send() {
         Ok(resp) => match resp.json::<SlackUserList>() {
             Ok(user_list) => {
                 let mut hm: HashMap<String, String> = HashMap::new();
@@ -61,6 +56,6 @@ fn get_user_channel() -> Result<HashMap<String, String>, reqwest::Error> {
 
 #[test]
 fn test_user_channel() {
-    let user_list = get_user_channel().unwrap();
+    let user_list = get_user_channel("", "").unwrap();
     println!("{:?}", user_list)
 }

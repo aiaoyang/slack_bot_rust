@@ -1,22 +1,57 @@
 use std::collections::HashMap;
 
+use config::*;
+use serde::{Deserialize, Serialize};
+
 use slack_bot::jira::structure::JiraHookInfo;
 use slack_bot::slack::channel::SlackUserList;
 use slack_bot::slack::structure::AppMsg;
 use slack_bot::userdb::get_users;
 use slack_bot::{context::MyContext, jira::traits::JiraInterface};
-
 #[macro_use]
 extern crate lazy_static;
-extern crate qstring;
-use qstring::QString;
 
 use actix_web::web::Json;
 use actix_web::{post, App, Error, HttpRequest, HttpResponse, HttpServer, Result};
 
+use qstring::QString;
+
 lazy_static! {
+    // 全局配置文件
+    static ref GLOBAL_CONFIG: MyConfig = MyConfig::new().unwrap();
+
+    // 全局用户名哈希表
     static ref HASHCONFIG: HashMap<String, String> = get_users();
-    static ref SLACK_CHANNEL: HashMap<String, String> = SlackUserList::new().unwrap();
+
+    // 全局用户ID哈希表
+    static ref SLACK_CHANNEL: HashMap<String, String> = SlackUserList::new(&GLOBAL_CONFIG.slack.token,&GLOBAL_CONFIG.slack.channel_search_url).unwrap();
+}
+#[derive(Debug, Serialize, Deserialize)]
+struct MyConfig {
+    slack: Slack,
+}
+#[derive(Debug, Serialize, Deserialize)]
+struct Slack {
+    #[serde(rename = "channelSearchUrl")]
+    channel_search_url: String,
+
+    #[serde(rename = "msgSendUrl")]
+    msg_send_url: String,
+
+    #[serde(rename = "token")]
+    token: String,
+
+    #[serde(rename = "adminUsers")]
+    admin_users: Option<Vec<String>>,
+}
+
+impl MyConfig {
+    fn new() -> Result<Self, ConfigError> {
+        let mut c = Config::default();
+        c.merge(File::with_name("config.yaml"))?;
+        c.try_into()
+        // todo!()
+    }
 }
 
 #[actix_web::main]
@@ -29,6 +64,7 @@ async fn main() -> std::io::Result<()> {
 
 #[post("/jirahook")]
 async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<HttpResponse, Error> {
+    println!("here i im");
     let query_str = req.query_string();
     let qs = QString::from(query_str);
 
@@ -36,8 +72,14 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
     let default_action_user = "JIRA机器人".to_string();
     let action_user = HASHCONFIG.get(action_user).unwrap_or(&default_action_user);
 
-    let zhangxianchun = SLACK_CHANNEL.get("zhangxianchun").unwrap();
-    let yangjiangdong = SLACK_CHANNEL.get("yangjiangdong").unwrap();
+    let admin_users = GLOBAL_CONFIG
+        .slack
+        .admin_users
+        .as_ref()
+        .unwrap()
+        .iter()
+        .map(|user_name| SLACK_CHANNEL.get(user_name).unwrap())
+        .collect::<Vec<&String>>();
 
     let to_user = SLACK_CHANNEL.get(&jira_info.assignee().0);
     println!("action_user: {}, send_to: {:#?}", &action_user, &to_user);
@@ -47,10 +89,13 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
     match AppMsg::from(&ctx, &jira_info.0) {
         Some(app_msg) => {
             if let Ok(_) = serde_json::to_string(&app_msg) {
-                if let Ok(_) = app_msg.send(&yangjiangdong) {}
-                if let Ok(_) = app_msg.send(&zhangxianchun) {}
+                for user_id in admin_users {
+                    if let Ok(_) = app_msg.send(&GLOBAL_CONFIG.slack.token, user_id).await {};
+                }
                 match to_user {
-                    Some(user) => if let Ok(_) = app_msg.send(&user) {},
+                    Some(user) => {
+                        if let Ok(_) = app_msg.send(&GLOBAL_CONFIG.slack.token, &user).await {}
+                    }
                     None => (),
                 }
             } else {
@@ -61,4 +106,13 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
     }
 
     Ok(HttpResponse::Ok().body("response"))
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_config_read() {
+        let conf = crate::MyConfig::new();
+        println!("{:#?}", conf);
+    }
 }

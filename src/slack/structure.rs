@@ -1,15 +1,15 @@
 use crate::context::Context;
 use crate::jira::traits::JiraInterface;
-use crate::slack::generator::gen_all_block;
+use crate::slack::block::gen_all_block;
 
-use reqwest::blocking::{Client, Response};
-use reqwest::header::HeaderMap;
-
+use actix_web::client;
 use serde::{Deserialize, Serialize};
 
 const SECTION: &'static str = "section";
 const DIVIDER: &'static str = "divider";
 const MARKDOWN: &'static str = "mrkdwn";
+
+const SLACK_CHANNEL_URL: &'static str = "https://slack.com/api/chat.postMessage";
 
 impl<'a> Msg<'a> {
     fn new(channel: &'a str, text: &'a str, app_msg: AppMsg) -> Self {
@@ -49,35 +49,29 @@ impl AppMsg {
         }
     }
 
-    pub fn send(&self, user_channel_name: &str) -> Result<Response, ()> {
-        let c = Client::new();
-        let mut header_map = HeaderMap::new();
+    pub async fn send(
+        &self,
+        token: &str,
+        user_channel_name: &str,
+    ) -> Result<actix_web::HttpResponse, actix_web::Error> {
+        use actix_web::http::header::*;
 
-        header_map.insert(
-            "Content-Type",
-            "application/json;charset=utf-8".parse().unwrap(),
-        );
-
-        header_map.insert(
-            "Authorization",
-            "Bearer xoxb-1626838453092-1657930941057-r4g8fIz2k6GArfq3tc2l0Y5g"
-                .parse()
-                .unwrap(),
-        );
+        let c = client::Client::new();
 
         if let Some(title) = self.blocks.get(0) {
             let title: String = title.clone().into();
-            match c
-                .post("https://slack.com/api/chat.postMessage")
-                .headers(header_map)
-                .json(&Msg::new(user_channel_name, &title, self.clone()))
-                .send()
+            if c.post(SLACK_CHANNEL_URL)
+                .set_header(CONTENT_TYPE, "application/json;charset=utf-8")
+                .set_header(AUTHORIZATION, format!("Bearer {}", token))
+                .send_json(&Msg::new(user_channel_name, &title, self.clone()))
+                .await?
+                .status()
+                .is_success()
             {
-                Ok(_) => (),
-                Err(_) => return Err(()),
+                return Ok(actix_web::web::HttpResponse::Ok().body("ok"));
             }
         }
-        Err(())
+        Err(actix_web::error::ErrorBadGateway(""))
     }
 }
 

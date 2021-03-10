@@ -13,7 +13,6 @@ define_impl!(Bold, bold, "*", "*");
 define_impl!(Code, code, "`", "`");
 define_impl!(Enter, enter, "", "\n");
 define_impl!(Line, line, "\n>", "");
-// define_impl!(Link, link, "<", ">");
 define_impl!(Tab, tab, "", "\t");
 
 const URL: &str = "https://jira.ys4fun.com/browse/";
