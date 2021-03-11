@@ -40,8 +40,8 @@ impl AppMsg {
         J: JiraInterface,
     {
         match gen_all_block(c, j) {
-            Some(blocks) => return Some(AppMsg { blocks }),
-            None => return None,
+            Some(blocks) => Some(AppMsg { blocks }),
+            None => None,
         }
     }
 

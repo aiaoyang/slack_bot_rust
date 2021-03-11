@@ -37,7 +37,6 @@ fn ldap_users(url: &str, base_dn: &str) -> HashMap<String, String> {
         })
         .collect::<Vec<HashMap<String, String>>>();
 
-    // println!("{:?}", &users_db);
     let mut db: HashMap<String, String> = HashMap::new();
 
     for item in users_db.into_iter() {

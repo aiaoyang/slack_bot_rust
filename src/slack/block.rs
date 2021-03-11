@@ -1,22 +1,11 @@
-use std::{collections::HashMap, vec};
+use std::vec;
 
-use crate::{context::Context, formatter::*, jira::traits::JiraInterface, slack::structure::Block};
-
-use lazy_static::lazy_static;
-
-lazy_static! {
-    pub static ref ACTION_HASHMAP: HashMap<String, String> = {
-        let mut hm: HashMap<String, String> = HashMap::new();
-        hm.insert("issue_created".to_string(), "创建问题".to_string());
-        hm.insert("issue_resolved".to_string(), "解决问题".to_string());
-        hm.insert("issue_commented".to_string(), "添加评论".to_string());
-        hm.insert("issue_closed".to_string(), "关闭问题".to_string());
-        hm.insert("issue_reopened".to_string(), "重开问题".to_string());
-        hm.insert("issue_assigned".to_string(), "修改经办人".to_string());
-
-        hm
-    };
-}
+use crate::{
+    context::Context,
+    formatter::*,
+    jira::traits::JiraInterface,
+    slack::{structure::Block, ACTION_HASHMAP},
+};
 
 // pub(crate) fn gen_msg<T, J>(c: &T, j: &J) -> Option<AppMsg>
 // where

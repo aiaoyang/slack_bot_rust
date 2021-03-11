@@ -79,32 +79,69 @@ async fn main() -> std::io::Result<()> {
 
 #[post("/jirahook")]
 async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<HttpResponse, Error> {
-    println!("here i im");
     let query_str = req.query_string();
     let qs = QString::from(query_str);
 
     let action_user = qs.get("user_id").unwrap_or("未定义行为");
     let default_action_user = "JIRA机器人".to_string();
+
+    // jirahook触发动作的用户
     let action_user = HASHCONFIG.get(action_user).unwrap_or(&default_action_user);
 
-    let admin_users = GLOBAL_CONFIG
-        .slack
-        .admin_users
-        .as_ref()
-        .unwrap()
-        .iter()
-        .map(|user_name| SLACK_CHANNEL.get(user_name).unwrap())
-        .collect::<Vec<&String>>();
-
-    let to_user = SLACK_CHANNEL.get(&jira_info.assignee().0);
-    println!("action_user: {}, send_to: {:#?}", &action_user, &to_user);
+    // 问题创建与重新打开分配用户
+    let admin_users = GLOBAL_CONFIG.slack.admin_users.as_ref().unwrap();
 
     let ctx = MyContext::from(action_user.to_string());
 
-    match AppMsg::from(&ctx, &jira_info.0) {
+    // 所有权变量
+    let j = jira_info.0;
+
+    let ((assignee_name, _), (reporter_name, _), (checker_name, _)) = (
+        j.assignee(),
+        j.reporter(),
+        j.checker().unwrap_or(("无".to_string(), "无".to_string())),
+    );
+
+    let _yangjd = "yangjiangdong".to_string();
+    // 初始化要发送的用户列表，经办人和报告人必选
+    let mut send_user: HashMap<&String, bool> = HashMap::new();
+    send_user.insert(&assignee_name, true);
+    send_user.insert(&_yangjd, true);
+    send_user.insert(&reporter_name, true);
+
+    println!("action: {}", &j.event_type().as_ref().unwrap().as_str());
+
+    match &j.event_type() {
+        Some(event_type) => match event_type.as_str() {
+            "issue_reopened" | "issue_created" => {
+                let _ = admin_users
+                    .iter()
+                    .map(|user_name| {
+                        send_user.insert(user_name, true);
+                    })
+                    .collect::<()>();
+            }
+
+            "issue_resolved" => {
+                send_user.insert(&checker_name, true);
+            }
+
+            _ => {}
+        },
+        None => (),
+    }
+
+    let finaly_send_user = send_user
+        .iter()
+        .filter_map(|(user_name, _)| SLACK_CHANNEL.get(user_name.clone()))
+        .collect::<Vec<&String>>();
+
+    println!("send user list: {:?}", &finaly_send_user);
+
+    match AppMsg::from(&ctx, &j) {
         Some(app_msg) => {
             if let Ok(_) = serde_json::to_string(&app_msg) {
-                for user_id in admin_users {
+                for user_id in finaly_send_user {
                     if let Ok(_) = app_msg
                         .send(
                             &GLOBAL_CONFIG.slack.token,
@@ -113,19 +150,6 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
                         )
                         .await
                     {};
-                }
-                match to_user {
-                    Some(user) => {
-                        if let Ok(_) = app_msg
-                            .send(
-                                &GLOBAL_CONFIG.slack.token,
-                                &GLOBAL_CONFIG.slack.msg_send_url,
-                                &user,
-                            )
-                            .await
-                        {}
-                    }
-                    None => (),
                 }
             } else {
                 println!("{}", "error");
