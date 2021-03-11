@@ -50,7 +50,7 @@ impl AppMsg {
         token: &str,
         post_url: &str,
         user_channel_name: &str,
-    ) -> Result<actix_web::HttpResponse, actix_web::Error> {
+    ) -> Result<(), actix_web::client::SendRequestError> {
         use actix_web::http::header::*;
 
         let c = client::ClientBuilder::new()
@@ -59,18 +59,18 @@ impl AppMsg {
 
         if let Some(title) = self.blocks.get(0) {
             let title: String = title.clone().into();
-            if c.post(post_url)
+            match c
+                .post(post_url)
                 .set_header(CONTENT_TYPE, "application/json;charset=utf-8")
                 .set_header(AUTHORIZATION, format!("Bearer {}", token))
                 .send_json(&Msg::new(user_channel_name, &title, self.clone()))
-                .await?
-                .status()
-                .is_success()
+                .await
             {
-                return Ok(actix_web::web::HttpResponse::Ok().body("ok"));
+                Ok(_) => return Ok(()),
+                Err(e) => return Err(e),
             }
         }
-        Err(actix_web::error::ErrorBadGateway(""))
+        Ok(())
     }
 }
 
