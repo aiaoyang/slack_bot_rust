@@ -125,6 +125,9 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
             "issue_resolved" => {
                 send_user.insert(&checker_name, true);
             }
+            "issue_updated" | "issue_generic" => {
+                return Ok(HttpResponse::Ok().body("response"));
+            }
 
             _ => {}
         },
@@ -138,25 +141,31 @@ async fn jira_hook(req: HttpRequest, jira_info: Json<JiraHookInfo>) -> Result<Ht
 
     println!("send user list: {:?}", &finaly_send_user);
 
-    match AppMsg::from(&ctx, &j) {
-        Some(app_msg) => {
-            if let Ok(_) = serde_json::to_string(&app_msg) {
-                for user_id in finaly_send_user {
-                    if let Ok(_) = app_msg
-                        .send(
-                            &GLOBAL_CONFIG.slack.token,
-                            &GLOBAL_CONFIG.slack.msg_send_url,
-                            user_id,
-                        )
-                        .await
-                    {};
-                }
-            } else {
-                println!("{}", "error");
+    if let Some(app_msg) = AppMsg::from(&ctx, &j) {
+        if let Ok(_) = serde_json::to_string(&app_msg) {
+            for user_id in finaly_send_user {
+                match app_msg
+                    .send(
+                        &GLOBAL_CONFIG.slack.token,
+                        &GLOBAL_CONFIG.slack.msg_send_url,
+                        user_id,
+                    )
+                    .await
+                {
+                    Ok(_) => {}
+                    Err(e) => {
+                        println!("send error: {:?}", e)
+                    }
+                };
             }
+            println!("send done");
+        } else {
+            println!("json to string error");
         }
-        None => println!("nothing happen"),
-    }
+        // None => println!("nothing happen"),
+    } else {
+        println!("new appmsg error")
+    };
 
     Ok(HttpResponse::Ok().body("response"))
 }

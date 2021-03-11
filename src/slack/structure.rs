@@ -53,7 +53,9 @@ impl AppMsg {
     ) -> Result<actix_web::HttpResponse, actix_web::Error> {
         use actix_web::http::header::*;
 
-        let c = client::Client::new();
+        let c = client::ClientBuilder::new()
+            .timeout(std::time::Duration::from_secs(30))
+            .finish();
 
         if let Some(title) = self.blocks.get(0) {
             let title: String = title.clone().into();
